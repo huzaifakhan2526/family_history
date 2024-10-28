@@ -3,19 +3,12 @@ import { SafeAreaView, Text, TextInput, TouchableOpacity, View } from 'react-nat
 import { Topbar } from './components';
 import { style } from 'twrnc';
 import tw from '../../../tw';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../../App';
 
-const inputTextStyle = style('text-lg font-semibold text-black');
-const buttonStyle = style('bg-[#FFA500] w-50 py-1 rounded-lg shadow-xl');
-const buttonTextStyle = style('text-lg text-white font-bold text-center');
-const inputStyle = style('border w-65 rounded-lg p-0 pl-2 mt-2 mb-6');
-const textStyle = style('text-xl font-semibold text-black text-center mb-6');
-const textStyle2 = style(tw`text-txtSecondary text-center font-semibold`);
-const textStyle3 = style(tw`text-txtSecondary text-center font-semibold text-xl`);
-const boxStyle = style(tw`bg-secondary my-10 mx-6 p-4 pb-10 rounded-lg`);
-const upladBox = style(tw`border w-65 rounded-lg py-2 mt-2 mb-16`);
-const boxStyle2 = style(tw`flex items-center justify-center`);
+type CreateAlbumScreenProps = NativeStackScreenProps<RootStackParamList, 'CreateAlbum'>
 
-export const CreateAlbumScreen = () => {
+export const CreateAlbumScreen = ({navigation} : CreateAlbumScreenProps) => {
     const [selectedImage, setSelectedImage] = useState(true);
 
     return (
@@ -57,7 +50,7 @@ export const CreateAlbumScreen = () => {
                         </View>
                     </View>
                     <View style={boxStyle2}>
-                        <TouchableOpacity style={buttonStyle}>
+                        <TouchableOpacity style={buttonStyle} onPress={() => navigation.navigate('Albums')}>
                             <Text style={buttonTextStyle}>Save</Text>
                         </TouchableOpacity>
                     </View>
@@ -66,3 +59,15 @@ export const CreateAlbumScreen = () => {
         </SafeAreaView>
     );
 };
+
+
+const inputTextStyle = style('text-lg font-semibold text-black');
+const buttonStyle = style('bg-[#FFA500] w-50 py-1 rounded-lg shadow-xl');
+const buttonTextStyle = style('text-lg text-white font-bold text-center');
+const inputStyle = style('border w-65 rounded-lg p-0 pl-2 mt-2 mb-6');
+const textStyle = style('text-xl font-semibold text-black text-center mb-6');
+const textStyle2 = style(tw`text-txtSecondary text-center font-semibold`);
+const textStyle3 = style(tw`text-txtSecondary text-center font-semibold text-xl`);
+const boxStyle = style(tw`bg-secondary my-10 mx-6 p-4 pb-10 rounded-lg`);
+const upladBox = style(tw`border w-65 rounded-lg py-2 mt-2 mb-16`);
+const boxStyle2 = style(tw`flex items-center justify-center`);

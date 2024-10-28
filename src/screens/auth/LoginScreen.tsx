@@ -1,39 +1,61 @@
 import React from 'react';
-import { SafeAreaView, Text, TextInput, View } from 'react-native';
-import tw from 'twrnc';
-import ProfilePicker from '../../components/ui/ProfilePicker';
+import { SafeAreaView, StatusBar, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { style } from 'twrnc';
+import tw from '../../../tw';
 import { OtpInput } from 'react-native-otp-entry';
-import { ButtonPrimary } from '../../components/common';
+import { ProfilePicker } from './components';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../../App';
+
+type LoginScreenProps = NativeStackScreenProps<RootStackParamList, 'Login'>
 
 
-export default function LoginScreen() {
+
+export const LoginScreen = ({navigation} : LoginScreenProps) => {
+
     return (
-        <SafeAreaView style={tw`bg-[#FFF6E6]`}>
-            <View style={tw`h-full flex justify-center items-center`}>
-                <View style={tw`mb-[106px]`}>
+        <SafeAreaView style={tw`bg-secondary h-full`}>
+            <StatusBar backgroundColor="#FFF6E6" />
+            <View style={boxStyle}>
+                <View style={tw`mt-20 mb-15`}>
                     <ProfilePicker />
                 </View>
                 <View>
-                    <Text style={tw`text-[16px] font-semibold mb-1`}>Enter Email : </Text>
+                    <Text style={inputTextStyle}>Enter Email : </Text>
                     <TextInput
                         placeholder="Enter your email"
-                        style={tw`border border-[#505050] p-0 w-[310px] h-[38px] rounded p-1`}
+                        style={inputStyle}
                     />
                 </View>
-                <View style={tw`mt-5 mb-10  w-80`}>
-                    <Text style={tw`text-[16px] font-semibold mb-1`}>Enter OTP : </Text>
+                <View style={boxStyle2}>
+                    <Text style={inputTextStyle}>Enter OTP : </Text>
                     <OtpInput numberOfDigits={4}
                         theme={{
-                            pinCodeContainerStyle: { height: 35, width: 45, borderColor: '#505050', marginHorizontal: 10},
-                            containerStyle: { width: 80 },
+                            pinCodeContainerStyle: { height: 30, width: 35, borderColor: '#505050', marginHorizontal: 10, borderRadius: 8, backgroundColor: '#FFF' },
+                            containerStyle: { width: 80, marginTop: 5 },
                         }}
                     />
                 </View>
-                <ButtonPrimary title={'Resend OTP'} />
-                <View style={tw`m-10`}>
-                    <ButtonPrimary title={'Login'} />
-                </View>
+                <TouchableOpacity style={buttonStyle}>
+                    <Text style={buttonTextStyle}>Resend OTP</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style={buttonStyle2}
+                    onPress={() => navigation.navigate('Home')}
+                >
+                    <Text style={buttonTextStyle2}>Login</Text>
+                </TouchableOpacity>
             </View>
         </SafeAreaView>
     );
-}
+};
+
+const boxStyle = style(tw`flex justify-center items-center`);
+const boxStyle2 = style(tw`mb-10  w-65`);
+const inputTextStyle = style('text-lg font-semibold text-black');
+const inputStyle = style('border w-65 rounded-lg p-0 pl-2 mt-2 mb-6 bg-white');
+const buttonStyle = style(tw`bg-primary w-30 py-2 rounded-lg shadow-xl`);
+const buttonStyle2 = style(tw`bg-primary w-50 py-1 rounded-lg shadow-xl mt-15`);
+const buttonTextStyle = style('text-sm text-white font-bold text-center');
+const buttonTextStyle2 = style('text-lg text-white font-bold text-center');
+

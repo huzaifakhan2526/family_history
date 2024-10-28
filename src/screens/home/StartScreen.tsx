@@ -1,47 +1,38 @@
 import React from 'react';
-import {  Image, SafeAreaView, StyleSheet, Text, View } from 'react-native';
-import { ButtonPrimary } from '../../components/common';
+import { Image, SafeAreaView, StatusBar, Text, TouchableOpacity, View } from 'react-native';
+import { style } from 'twrnc';
+import tw from '../../../tw';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../../App';
+
+type StartScreenProps = NativeStackScreenProps<RootStackParamList, 'Start'>
 
 
-export default function StartScreen() {
+export const StartScreen = ({navigation}: StartScreenProps) => {
+
     return (
-        <SafeAreaView style={styles.safearea}>
-            <Image source={require('../../assets/images/StartScreenImg101.png')}/>
-            <View style={styles.container}>
-                <Text style={styles.text}>Welcome Your personal space to store, organize, and cherish all your
+        <SafeAreaView style={tw`bg-white`}>
+            <StatusBar backgroundColor="#FFFFFF" />
+            <View style={boxStyle}>
+                <Image source={require('../../assets/images/StartScreenImg101.png')} style={imgStyle} />
+                <Text style={textStyle}>Welcome Your personal space to store, organize, and cherish all your
                     family photos, documents, and memories in one secure place. Start preserving your
                     family history today!"
                 </Text>
-                <View style={styles.container2}><ButtonPrimary title={'Next'} /></View>
+                <View style={boxStyle2}>
+                    <TouchableOpacity style={buttonStyle}  onPress={() => navigation.navigate('Login')}>
+                        <Text style={buttonTextStyle}>Next</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
         </SafeAreaView>
     );
-}
+};
 
-const styles = StyleSheet.create({
-    safearea: {
-        flex: 1,
-        backgroundColor: '#ffffff',
-    },
-    container: {
-        display: 'flex',
-        alignItems: 'center',
-        paddingHorizontal: 42,
-    },
-    text: {
-        fontSize: 17,
-        fontWeight: '700',
-        fontFamily: 'popins',
-        lineHeight: 34,
-        textAlign: 'center',
-        marginTop: 62,
-        color: '#121212',
-    },
-    container2: {
-        width: '100%',
-        marginTop: 62,
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'flex-end',
-    },
-});
+const imgStyle = style(tw`h-80 w-70`);
+const boxStyle = style(tw`justify-center items-center  mx-5 h-[100%]`);
+const textStyle = style(tw`text-txtSecondary text-base text-center font-bold leading-8 mt-15 mb-20s`);
+const buttonStyle = style(tw`bg-primary w-25 py-1 rounded-lg shadow-xl`);
+const buttonTextStyle = style('text-lg text-white font-bold text-center');
+const boxStyle2 = style(tw`w-80 items-end justify-end`);
+

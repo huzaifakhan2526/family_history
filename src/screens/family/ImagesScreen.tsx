@@ -4,6 +4,10 @@ import { Topbar, UploadPopUp } from './components';
 import Search from '../../assets/icons/search.svg';
 import { style } from 'twrnc';
 import tw from '../../../tw';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../../App';
+
+type ImagesScreenProps = NativeStackScreenProps<RootStackParamList, 'Albums'>
 
 const searchBox = style(tw`border flex flex-row items-center justify-between rounded-lg py-1 px-2 mx-4 mt-5 mb-10`);
 const inputStyle = style(tw`w-60 p-0`);
@@ -15,12 +19,12 @@ const albumStyle = style(tw`items-center w-25`);
 const ablumImageStyle = style(tw`h-20 w-20 rounded-full shadow-xl`);
 const albumNameStyle = style(tw`text-txtSecondary text-2lg font-semibold mt-2`);
 const buttonTextStyle = style('text-4xl text-white font-semibold text-center');
-const addBtnStyle = style(tw`bg-primary h-10 w-10 rounded-full shadow-xl justify-center absolute top-160 left-75`);
+const addBtnStyle = style(tw`bg-primary h-10 w-10 rounded-full shadow-xl justify-center absolute top-150 left-75`);
 const boxShadow = style(tw`shadow-lg`);
 
 
 
-export const ImagesScreen = () => {
+export const ImagesScreen = ({ navigation }: ImagesScreenProps) => {
     const [activeTab, setAcitveTab] = useState('Albums');
     const [popupVisibility, setPopupVisibilty] = useState(false);
 
@@ -44,12 +48,15 @@ export const ImagesScreen = () => {
                     {
                         activeTab === 'Albums' ? (
                             <View style={albumTabStyle}>
-                                <View style={albumStyle}>
-                                    <View style={boxShadow}>
-                                        <Image source={require('../../assets/images/profile101.jpg')} style={ablumImageStyle} />
+                                <TouchableOpacity onPress={() => navigation.navigate('AlbumsDetail')}>
+                                    <View style={albumStyle}>
+                                        <View style={boxShadow}>
+                                            <Image source={require('../../assets/images/profile101.jpg')} style={ablumImageStyle} />
+                                        </View>
+                                        <Text style={albumNameStyle}>Goa Trip</Text>
                                     </View>
-                                    <Text style={albumNameStyle}>Goa Trip</Text>
-                                </View>
+                                </TouchableOpacity>
+
                                 <View style={albumStyle}>
                                     <Image source={require('../../assets/images/profile101.jpg')} style={ablumImageStyle} />
                                     <Text style={albumNameStyle}>Memories</Text>

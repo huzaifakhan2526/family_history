@@ -3,17 +3,15 @@ import { Image, SafeAreaView, ScrollView, Text, TextInput, TouchableOpacity, Vie
 import tw from '../../../tw';
 import { Heading } from './components';
 import { style } from 'twrnc';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../../App';
 
-const textStyle = style('text-xl font-semibold text-black text-center');
-const buttonStyle = style('bg-[#FFA500] w-50 py-1 rounded-lg shadow-xl');
-const buttonTextStyle = style('text-lg text-white font-bold text-center');
-const inputStyle = style('border w-60 rounded-lg p-0 pl-2 mt-2 mb-6');
-const inputTextStyle = style('text-xl font-semibold text-black');
+type CreateFolderScreenProps = NativeStackScreenProps<RootStackParamList, 'CreateFolder'>
 
 
-export default function CreateFolderScreen() {
+export const CreateFolderScreen = ({navigation} : CreateFolderScreenProps) => {
+
   const [access, setAccess] = useState(true);
-
 
   return (
     <SafeAreaView style={tw`flex-1`}>
@@ -49,12 +47,19 @@ export default function CreateFolderScreen() {
               </View>
             </View>
           </View>
-          <TouchableOpacity style={buttonStyle}>
+          <TouchableOpacity style={buttonStyle} onPress={() => navigation.navigate('Home')}>
             <Text style={buttonTextStyle}>Save</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
     </SafeAreaView>
   );
-}
+};
+
+const textStyle = style('text-xl font-semibold text-black text-center');
+const buttonStyle = style('bg-[#FFA500] w-50 py-1 rounded-lg shadow-xl');
+const buttonTextStyle = style('text-lg text-white font-bold text-center');
+const inputStyle = style('border w-60 rounded-lg p-0 pl-2 mt-2 mb-6');
+const inputTextStyle = style('text-xl font-semibold text-black');
+
 
