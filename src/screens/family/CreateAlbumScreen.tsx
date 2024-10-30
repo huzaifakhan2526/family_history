@@ -55,7 +55,7 @@ export const CreateAlbumScreen = ({navigation} : CreateAlbumScreenProps) => {
                         </TouchableOpacity>
                     </View>
                 </View>
-            </View>
+            </View> 
         </SafeAreaView>
     );
 };

@@ -1,14 +1,32 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Image, SafeAreaView, StatusBar, Text, TouchableOpacity, View } from 'react-native';
 import { style } from 'twrnc';
 import tw from '../../../tw';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../App';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useIsFocused } from '@react-navigation/native';
 
 type StartScreenProps = NativeStackScreenProps<RootStackParamList, 'Start'>
 
 
-export const StartScreen = ({navigation}: StartScreenProps) => {
+export const StartScreen = ({ navigation }: StartScreenProps) => {
+    const [token, setToken] = useState<string | null>(null);
+    const isFocused = useIsFocused();
+
+    useEffect(() => {
+        const loadToken = async () => {
+            try {
+                const storedToken = await AsyncStorage.getItem('userToken');
+                setToken(storedToken);
+                console.log(storedToken);
+            } catch (error) {
+                console.error('Failed to load token', error);
+            }
+        };
+
+        if (isFocused) {loadToken();}
+    },[isFocused]);
 
     return (
         <SafeAreaView style={tw`bg-white`}>
@@ -20,7 +38,7 @@ export const StartScreen = ({navigation}: StartScreenProps) => {
                     family history today!"
                 </Text>
                 <View style={boxStyle2}>
-                    <TouchableOpacity style={buttonStyle}  onPress={() => navigation.navigate('Login')}>
+                    <TouchableOpacity style={buttonStyle} onPress={() => token ? navigation.navigate('Home') : navigation.navigate('Login')}>
                         <Text style={buttonTextStyle}>Next</Text>
                     </TouchableOpacity>
                 </View>

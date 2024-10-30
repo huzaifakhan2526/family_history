@@ -25,20 +25,20 @@ export const ProfilePicker = () => {
     };
 
     return (
-        <View style={boxStyle}>
-            {/* <Image source={require('../../../assets/images/img-105.png')}  style={imgStyle} /> */}
-            <TouchableOpacity onPress={pickImage}>
+        <TouchableOpacity onPress={pickImage}>
+            <View style={boxStyle}>
+                <Image source={require('../../../assets/images/img-105.png')} style={imgStyle} />
                 <View style={boxStyle2}>
                     <Camera />
                 </View>
-            </TouchableOpacity>
-        </View>
+            </View>
+        </TouchableOpacity>
     );
 };
 
 
 const boxStyle = style(tw`h-30 w-30 rounded-full bg-white`);
-const boxStyle2 = style(tw`absolute top-27 left-12`);
+const boxStyle2 = style(tw`absolute top-28 left-12`);
 const imgStyle = style(tw`w-30 h-30 rounded-full`);
 
 
