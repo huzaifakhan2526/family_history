@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Image, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Image, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { CreateFolderPopup, Topbar, UploadPopUp } from './components';
 import { style } from 'twrnc';
 import tw from '../../../tw';
@@ -18,10 +18,12 @@ export const MyFamilyScreen = ({ navigation, route }: MyFamilyScreenProps) => {
     const [folders, setFolders] = useState<any>([]);
     const [media, setMedia] = useState<any>([]);
     const [activeTab, setAcitveTab] = useState('Folder');
+    const [laoding, setLoading] = useState(true);
 
     useEffect(() => {
         const get_folder_media = async () => {
             try {
+                setLoading(true);
                 const id = await AsyncStorage.getItem('userId');
                 const session = await AsyncStorage.getItem('userToken');
 
@@ -43,9 +45,10 @@ export const MyFamilyScreen = ({ navigation, route }: MyFamilyScreenProps) => {
 
                 const { data } = res.data;
                 setMedia(data || []);
-                console.log(media);
             } catch (error) {
                 console.log(error);
+            } finally {
+                setLoading(false);
             }
         };
 
@@ -101,28 +104,38 @@ export const MyFamilyScreen = ({ navigation, route }: MyFamilyScreenProps) => {
                 </View>
             </View>
             {activeTab === 'Folder' ? (
-                <View>
+                <View style={ctrStyle}>
                     <Text>This is Folder Tab</Text>
                 </View>
             ) : (
-                <ScrollView>
-                    <View style={ctrStyle}>
-                        {media.map((items, index) => {
-                            return (
-                                <TouchableOpacity key={index}>
-                                    <View style={boxStyle}>
-                                        <Image source={{ uri: items.url }} style={tw`w-20 h-20`} />
-                                        <View style={tw`flex-row justify-between w-[90%] m-2`}>
-                                            <Text style={textStyle}>{items.media_name}</Text>
-                                            <Text style={textStyle}>{items.media_type}</Text>
-                                        </View>
-                                        <Text style={textStyle2}>{items.description}</Text>
-                                    </View>
-                                </TouchableOpacity>
-                            );
-                        })}
+                <ScrollView contentContainerStyle={{ paddingVertical: 10 }}>
+                    {
+                        laoding ? (
+                            <View style={tw`flex-1 justify-center items-center`}>
+                                <ActivityIndicator size="large" color="#FFA500" />
+                                <Text>Loading media...</Text>
+                            </View>
+                        ) : (
+                            <View style={ctrStyle}>
+                                {media.map((items, index) => {
+                                    return (
+                                        <TouchableOpacity key={index}>
+                                            <View style={boxStyle}>
+                                                <Image source={{ uri: items.url }} style={tw`w-20 h-20`} />
+                                                <View style={tw`flex-row justify-between w-[90%] m-2`}>
+                                                    <Text style={textStyle}>{items.media_name}</Text>
+                                                    <Text style={textStyle}>{items.media_type}</Text>
+                                                </View>
+                                                <Text style={textStyle2}>{items.description}</Text>
+                                            </View>
+                                        </TouchableOpacity>
+                                    );
+                                })}
 
-                    </View>
+                            </View>
+                        )
+                    }
+
                 </ScrollView>
             )}
 

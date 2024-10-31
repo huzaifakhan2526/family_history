@@ -10,11 +10,11 @@ import Toast from 'react-native-toast-message';
 
 const inputTextStyle = style('text-lg font-semibold text-black mt-3 mb-2');
 const textStyle2 = style(tw`text-txtSecondary text-center font-semibold mt-2`);
-const boxStyle = style(tw`bg-secondary w-80  justify-center items-center shadow-xl rounded-lg items-center p-10`);
+const boxStyle = style(tw`bg-secondary w-80  justify-center items-center shadow-xl rounded-lg items-center p-10 py-3`);
 const boxStyle2 = style(tw`border border-2 border-primary border-dashed rounded-lg items-center py-3 w-70`);
 const buttonStyle = style('bg-[#FFA500] w-50 py-1 rounded-lg shadow-xl mb-5');
 const buttonTextStyle = style('text-lg text-white font-bold text-center');
-const noteBoxStyle = style(tw`border rounded-lg p-2 h-20 mb-20 w-70`);
+const noteBoxStyle = style(tw`border rounded-lg p-2 h-20 mb-5 w-70`);
 const boxStyle3 = style(tw`flex items-center justify-center`);
 const buttonStyle2 = style(tw`flex-1 items-center justify-center`);
 const inputStyle = style('border w-70 rounded-lg p-0 pl-2 mt-2 mb-6');
@@ -26,13 +26,16 @@ export const UploadPopUp = ({ visible, onClose, folderId, foldername }: { visibl
   const [selectedImage, setSelectedImage] = useState<Asset | null>(null);
   const [imageFileName, setImageFileName] = useState<string | any>(null);
   const [description, setDescription] = useState<string>('');
+  const [mediaType, setMediaType] = useState('IMAGE');
 
   const handleImageSelect = async () => {
-    let options = {
-      storageOption: {
-        path: 'image',
-      },
-    };
+    // let options = {
+    //   storageOption: {
+    //     path: 'image',
+    //   },
+    // };
+
+    let options = { mediaType: mediaType.toLowerCase() };
 
     await launchImageLibrary(options, (response) => {
       if (response.didCancel) {
@@ -42,10 +45,10 @@ export const UploadPopUp = ({ visible, onClose, folderId, foldername }: { visibl
       } else if (response.assets) {
         const asset = response.assets[0];
         setSelectedImage(asset);
+        upload_media();
       }
     });
 
-    upload_media();
   };
 
   const upload_media = async () => {
@@ -75,6 +78,7 @@ export const UploadPopUp = ({ visible, onClose, folderId, foldername }: { visibl
       );
       const { file_name } = res.data.data;
       setImageFileName(file_name);
+      console.log(selectedImage);
       if (res.data.status) {
         Toast.show({
           type: 'success',
@@ -82,6 +86,7 @@ export const UploadPopUp = ({ visible, onClose, folderId, foldername }: { visibl
         });
       }
     } catch (error) {
+      console.log(error);
       Toast.show({
         type: 'error',
         text1: 'Selection unsuccessesfull',
@@ -102,7 +107,7 @@ export const UploadPopUp = ({ visible, onClose, folderId, foldername }: { visibl
         'media_name': mediaName,
         'url': imageFileName,
         'description': description,
-        'media_type': 'IMAGE',
+        'media_type': mediaType,
       };
 
       const res = await axiosInstance.post(
@@ -144,6 +149,26 @@ export const UploadPopUp = ({ visible, onClose, folderId, foldername }: { visibl
         activeOpacity={1}
       >
         <View style={boxStyle}>
+          <Text style={inputTextStyle}>Select Media Type</Text>
+          <View style={tw`flex flex-row items-center justify-start`}>
+            <TouchableOpacity style={tw`flex flex-row items-center mr-3`} onPress={() => setMediaType('IMAGE')}>
+              <View style={tw`border h-6 w-6 rounded-full flex items-center justify-center m-3`}>
+                {mediaType === 'IMAGE' &&
+                  <View style={tw`h-3 w-3 rounded-full bg-primary`} />
+                }
+              </View>
+              <Text style={inputTextStyle}>Image</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={tw`flex flex-row items-center`} onPress={() => setMediaType('VIDEO')}>
+              <View style={tw`border h-6 w-6 rounded-full flex items-center justify-center m-3`}>
+                {mediaType === 'VIDEO' &&
+                  <View style={tw`h-3 w-3 rounded-full bg-primary`} />
+                }
+              </View>
+              <Text style={inputTextStyle}>Video</Text>
+            </TouchableOpacity>
+          </View>
+
           <TouchableOpacity onPress={handleImageSelect}>
             <Text style={inputTextStyle}>Upload Media</Text>
             <View style={boxStyle2}>
