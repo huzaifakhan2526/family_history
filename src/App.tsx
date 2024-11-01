@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Home from './assets/icons/home.svg';
 import Profile from './assets/icons/user-circle-thin.svg';
 
@@ -12,6 +12,7 @@ import { CreateFolderScreen, LandingScreen, StartScreen } from './screens/home';
 import { LoginScreen, ProfileScreen } from './screens/auth';
 import { AuthProvider } from './context/AuthContext';
 import Toast from 'react-native-toast-message';
+import SplashScreen from 'react-native-splash-screen';
 
 export type RootStackParamList = {
   Start: undefined;
@@ -19,7 +20,7 @@ export type RootStackParamList = {
   BottomTabs: undefined;
   Home: undefined;
   CreateFolder: undefined;
-  MyFamily:  { folderId: string | null, foldername: string | null };
+  MyFamily: { folderId: string | null, foldername: string | null };
   ImagesScreen: undefined;
   CreateAlbum: undefined;
   Albums: undefined;
@@ -30,15 +31,15 @@ export type RootStackParamList = {
 
 
 
-const renderHomeIcon = ({focused}) => {
+const renderHomeIcon = ({ focused }) => {
   return (
     <Home width={30} height={30} fill={focused ? '#FFA500' : '#000000'} />
   );
 };
 
-const renderProfileIcon = ({focused}) => {
+const renderProfileIcon = ({ focused }) => {
   return (
-    <Profile width={30} height={30} fill={focused ? '#FFA500' :  '#000000'} />
+    <Profile width={30} height={30} fill={focused ? '#FFA500' : '#000000'} />
   );
 };
 
@@ -92,7 +93,7 @@ const BottomTabs = () => {
         name="MyFamily"
         component={MyFamilyScreen}
         options={{ headerShown: false, tabBarButton: () => null }}
-        initialParams={{folderId : null}}
+        initialParams={{ folderId: null }}
       />
       <Tabs.Screen
         name="CreateAlbum"
@@ -125,6 +126,9 @@ const BottomTabs = () => {
 
 
 function App(): React.JSX.Element {
+  useEffect(() => {
+    SplashScreen.hide();
+  })
   return (
     <AuthProvider>
       <NavigationContainer>

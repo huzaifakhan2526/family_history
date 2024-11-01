@@ -19,7 +19,7 @@ export const StartScreen = ({ navigation }: StartScreenProps) => {
             try {
                 const storedToken = await AsyncStorage.getItem('userToken');
                 setToken(storedToken);
-                console.log(storedToken);
+                // console.log(storedToken);
             } catch (error) {
                 console.error('Failed to load token', error);
             }
