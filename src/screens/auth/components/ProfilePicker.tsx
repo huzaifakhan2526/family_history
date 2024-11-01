@@ -25,7 +25,9 @@ export const ProfilePicker = () => {
     };
 
     return (
-        <TouchableOpacity onPress={pickImage}>
+        <TouchableOpacity 
+        // onPress={pickImage}
+        >
             <View style={boxStyle}>
                 <Image source={require('../../../assets/images/img-105.png')} style={imgStyle} />
                 <View style={boxStyle2}>

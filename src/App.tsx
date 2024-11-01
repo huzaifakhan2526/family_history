@@ -5,6 +5,7 @@ import Profile from './assets/icons/user-circle-thin.svg';
 // Navigation
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 // Screens
 import { AlbumScreen, CreateAlbumScreen, ImageDetailScreen, ImagesScreen, MyFamilyScreen } from './screens/family';
@@ -13,10 +14,15 @@ import { LoginScreen, ProfileScreen } from './screens/auth';
 import { AuthProvider } from './context/AuthContext';
 import Toast from 'react-native-toast-message';
 import SplashScreen from 'react-native-splash-screen';
+import { CardStyleInterpolators } from '@react-navigation/stack';
+import { StatusBar } from 'react-native';
+import { OtpVerificationScreen } from './verification/OtpVerificationScreen';
+
 
 export type RootStackParamList = {
   Start: undefined;
   Login: undefined;
+  OtpVerification: undefined;
   BottomTabs: undefined;
   Home: undefined;
   CreateFolder: undefined;
@@ -45,6 +51,7 @@ const renderProfileIcon = ({ focused }) => {
 
 const Tabs = createBottomTabNavigator<RootStackParamList>();
 
+const Stack = createNativeStackNavigator<RootStackParamList>();
 const BottomTabs = () => {
   return (
     <Tabs.Navigator
@@ -81,7 +88,7 @@ const BottomTabs = () => {
         component={LandingScreen}
         options={{
           headerShown: false,
-          tabBarIcon: renderHomeIcon,
+          tabBarIcon: renderHomeIcon
         }}
       />
       <Tabs.Screen
@@ -127,15 +134,38 @@ const BottomTabs = () => {
 
 function App(): React.JSX.Element {
   useEffect(() => {
-    SplashScreen.hide();
-  })
+    const timer = setTimeout(() => {
+      SplashScreen.hide();
+    }, 1000);
+
+
+    return () => clearTimeout(timer);
+  }, []);
   return (
-    <AuthProvider>
-      <NavigationContainer>
-        <BottomTabs />
-      </NavigationContainer>
-      <Toast />
-    </AuthProvider>
+    // <AuthProvider>
+    //   <NavigationContainer>
+    //     <BottomTabs />
+    //   </NavigationContainer>
+    //   <Toast />
+    // </AuthProvider>
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="Start" screenOptions={{ headerShown: false }}>
+        <Stack.Screen
+          name="Start"
+          component={StartScreen}
+        />
+        <Stack.Screen
+          name="Login"
+          component={LoginScreen}
+          options={{animation: 'slide_from_bottom'}}
+        />
+        <Stack.Screen
+          name="OtpVerification"
+          component={OtpVerificationScreen}
+          options={{animation: 'slide_from_right'}}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
 
   );
 }

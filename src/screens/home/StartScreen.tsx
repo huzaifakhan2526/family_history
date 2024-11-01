@@ -18,7 +18,9 @@ export const StartScreen = ({ navigation }: StartScreenProps) => {
         const loadToken = async () => {
             try {
                 const storedToken = await AsyncStorage.getItem('userToken');
-                setToken(storedToken);
+                if(storedToken){
+                    setToken(storedToken);
+                }
                 // console.log(storedToken);
             } catch (error) {
                 console.error('Failed to load token', error);
@@ -30,15 +32,15 @@ export const StartScreen = ({ navigation }: StartScreenProps) => {
 
     return (
         <SafeAreaView style={tw`bg-white`}>
-            <StatusBar backgroundColor="#FFFFFF" />
+            <StatusBar backgroundColor="#FFF6E6" />
             <View style={boxStyle}>
                 <Image source={require('../../assets/images/StartScreenImg101.png')} style={imgStyle} />
                 <Text style={textStyle}>Welcome Your personal space to store, organize, and cherish all your
                     family photos, documents, and memories in one secure place. Start preserving your
-                    family history today!"
+                    family history today!
                 </Text>
                 <View style={boxStyle2}>
-                    <TouchableOpacity style={buttonStyle} onPress={() => token ? navigation.navigate('Home') : navigation.navigate('Login')}>
+                    <TouchableOpacity style={buttonStyle} onPress={() => token ? navigation.navigate('Home') : navigation.replace('Login')}>
                         <Text style={buttonTextStyle}>Next</Text>
                     </TouchableOpacity>
                 </View>
