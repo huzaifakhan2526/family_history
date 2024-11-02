@@ -34,7 +34,7 @@ export default function Navbar() {
 
 
     return (
-        <View style={tw`bg-[#FFA500] h-35 rounded-b-2xl`}>
+        <View style={[tw`bg-[#FFA500] h-35 rounded-b-2xl`, styles.topboxmain]}>
             <View style={tw`flex flex-row justify-end items-center pr-3 pt-1`}>
                 <View style={tw`bg-white h-10 w-10 rounded-full flex items-center justify-center`}>
                     <Image source={require('../../assets/images/gravity-ui_bell-dot3.png')} style={{ width: 25, height: 25 }} />
@@ -44,7 +44,7 @@ export default function Navbar() {
                     <Image source={require('../../assets/images/3135715.png')} style={{ width: 55, height: 55, borderRadius: 50, borderWidth: 4, borderColor: '#fff' }} />
                 </TouchableOpacity>
             </View>
-            <View style={tw`pl-4`}>
+            <View style={[tw`pl-4`, styles.absoluteBox]}>
                 <Text style={[tw`text-white text-2xl`, styles.robotoText]}>
                     Welcome{'\n'}
                     {nameFromEmail}{'\n'}
@@ -68,4 +68,13 @@ const styles = StyleSheet.create({
         color: '#FFFFFF',
         fontStyle: 'italic',
     },
+    absoluteBox: {
+        position: 'absolute',
+        bottom: 0, // Adjust as needed
+        left: 0, // Adjust as needed
+        // You can set width, height, or other styles as needed
+    },
+    topboxmain: {
+        position: 'relative'
+    }
 });

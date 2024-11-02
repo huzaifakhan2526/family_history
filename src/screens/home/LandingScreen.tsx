@@ -104,15 +104,15 @@ export const LandingScreen = ({ navigation }: LandingScreenProps) => {
                                         <TouchableOpacity style={tw`bg-[#FFA500] py-1 rounded-lg w-20 mt-2 mb-15`}>
                                             <Text style={tw`text-white font-semibold text-sm text-center`}>Owner</Text>
                                         </TouchableOpacity>
-                                        <View style={tw`flex flex-row justify-between`}>
-                                            <TouchableOpacity style={tw`bg-[#FFFFFF] px-1 py-1 rounded-lg w-20`} onPress={() => navigation.navigate('MyFamily', { folderId: items.folder_id, foldername: items.folder_name })}>
+
+                                            <TouchableOpacity style={[tw`bg-[#FFFFFF] px-1 py-1 rounded-lg w-20`, styles.cardtemplateview]} onPress={() => navigation.navigate('MyFamily', { folderId: items.folder_id, foldername: items.folder_name })}>
                                                 <Text style={tw`text-[#BF7C00] font-semibold text-lg text-center`}>View</Text>
                                             </TouchableOpacity>
-                                            <TouchableOpacity style={tw`bg-[#BF7C00] px-1 py-1 px-2 rounded-lg w-20 relative z-1 flex-row items-center justify-between`}>
+                                            <TouchableOpacity style={[tw`bg-[#BF7C00] px-1 py-1 px-2 rounded-lg w-20 relative z-1 flex-row items-center justify-between`, styles.cardtemplateinvite]}>
                                                 <Invite />
                                                 <Text style={tw`text-white font-semibold text-lg text-center`}>Invite</Text>
                                             </TouchableOpacity>
-                                        </View>
+
                                         <Image source={{ uri: items.folder_image }} style={tw`absolute z-0 top-12 left-55 w-30 h-30`} resizeMode="cover" />
                                     </View>
                                 );
@@ -129,6 +129,7 @@ export const LandingScreen = ({ navigation }: LandingScreenProps) => {
 const styles = StyleSheet.create({
     boxShadow: {
         // For iOS
+        position: 'relative',
         shadowColor: 'rgba(0, 0, 0, 0.24)',
         shadowOffset: {
             width: 0,
@@ -139,5 +140,19 @@ const styles = StyleSheet.create({
         // For Android
         elevation: 3, // Adjust the elevation for the desired shadow effect
     },
+    cardtemplateview:{
+        position: 'absolute',
+        bottom: 6,
+        left: 6
+        
+    },
+    main: {
+        position: 'relative'
+    },
+    cardtemplateinvite:{
+        position: 'absolute',
+        top: 6,
+        right: 6
+    }
 });
 
