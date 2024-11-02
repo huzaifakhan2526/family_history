@@ -216,11 +216,13 @@ function App(): React.JSX.Element {
         <Stack.Screen 
         name="Main" 
         component={TabNavigator} 
+        options={{ animation: 'slide_from_bottom' }}
         /> 
         <Stack.Screen 
         name="MyFamily" 
         component={MyFamilyScreen} 
         initialParams={{ folderId: null }}
+        options={{ animation: 'slide_from_right' }}
         /> 
       </Stack.Navigator>
     </NavigationContainer>
