@@ -217,6 +217,11 @@ function App(): React.JSX.Element {
         name="Main" 
         component={TabNavigator} 
         /> 
+        <Stack.Screen 
+        name="MyFamily" 
+        component={MyFamilyScreen} 
+        initialParams={{ folderId: null }}
+        /> 
       </Stack.Navigator>
     </NavigationContainer>
 

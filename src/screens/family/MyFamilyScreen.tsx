@@ -7,6 +7,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../App';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axiosInstance from '../../api/axiosInstance';
+import { useFocusEffect } from '@react-navigation/native';
 
 
 type MyFamilyScreenProps = NativeStackScreenProps<RootStackParamList, 'MyFamily'>
@@ -20,19 +21,21 @@ export const MyFamilyScreen = ({ navigation, route }: MyFamilyScreenProps) => {
     const [activeTab, setAcitveTab] = useState('Folder');
     const [laoding, setLoading] = useState(true);
 
-    useEffect(() => {
-        const get_folder_media = async () => {
-            try {
-                setLoading(true);
-                const id = await AsyncStorage.getItem('userId');
-                const session = await AsyncStorage.getItem('userToken');
 
+    const get_folder_media = async () => {
+        try {
+            setLoading(true);
+            const jsonValue = await AsyncStorage.getItem('userData'); // Replace 'userData' with your actual key
+            if (jsonValue) {
+                const parsedData = JSON.parse(jsonValue); // Parse the JSON string
+                const id = parsedData.user_id;
+                const session = parsedData.session.session_token;
                 const getFolderData = {
                     'user_id': id,
                     'session_token': session,
                     'folder_id': folderId,
                 };
-
+                console.log('Media folder data',getFolderData);
                 const res = await axiosInstance.post(
                     'folder/get_folder_media',
                     getFolderData,
@@ -44,28 +47,35 @@ export const MyFamilyScreen = ({ navigation, route }: MyFamilyScreenProps) => {
                 );
 
                 const { data } = res.data;
+                console.log('Media', data);
                 setMedia(data || []);
-            } catch (error) {
-                console.log(error);
-            } finally {
-                setLoading(false);
             }
-        };
+
+            
+
+            
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
 
 
-        const get_folders = async () => {
-            try {
-                const id = await AsyncStorage.getItem('userId');
-                const session = await AsyncStorage.getItem('userToken');
-
+    const get_folders = async () => {
+        try {
+            const jsonValue = await AsyncStorage.getItem('userData'); // Replace 'userData' with your actual key
+            if (jsonValue) {
+                const parsedData = JSON.parse(jsonValue); // Parse the JSON string
+                const id = parsedData.user_id;
+                const session = parsedData.session.session_token;
                 const getFolderData = {
                     'user_id': id,
                     'session_token': session,
-                    'parent_folder_id': folderId,
+                    'folder_id': folderId,
                 };
-
-                console.log(getFolderData);
+                console.log('getFolderData', getFolderData);
 
                 const res = await axiosInstance.post(
                     'folder/get_folders',
@@ -81,18 +91,24 @@ export const MyFamilyScreen = ({ navigation, route }: MyFamilyScreenProps) => {
                 const { data } = res.data;
                 setFolders(data || []);
                 console.log('Folder Data', folders);
-            } catch (error) {
-                console.log(error);
             }
-        };
 
-        get_folders();
-        get_folder_media();
-    }, []);
+            
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    useFocusEffect(
+        React.useCallback(() => {
+            get_folders();
+            get_folder_media(); // Fetch folders when the screen is focused
+        }, [])
+    );
 
     return (
         <SafeAreaView>
-            <Topbar title="My Family" />
+            <Topbar title={foldername} />
             <View>
                 <View style={toggleStyle}>
                     <TouchableOpacity onPress={() => setAcitveTab('Folder')}>
@@ -162,7 +178,7 @@ export const MyFamilyScreen = ({ navigation, route }: MyFamilyScreenProps) => {
 const ctrStyle = style(tw`flex flex-row flex-wrap justify-between items-center mt-5`);
 const boxStyle = style(tw`h-35 w-35 bg-ternary rounded-lg flex justify-center items-center shadow-xl m-5`);
 const textStyle = style(tw`text-txtSecondary text-sm font-semibold`);
-const textStyle2 = style(tw`text-txtSecondary text-sx`);
+const textStyle2 = style(tw`text-txtSecondary`);
 const addBtnStyle = style(tw`bg-primary h-10 w-10 rounded-full shadow-xl justify-center absolute top-155 left-75`);
 const addBtnStyle2 = style(tw`bg-primary h-10 w-10 rounded-full shadow-xl justify-center absolute top-140 left-75`);
 const buttonTextStyle = style('text-4xl text-white font-semibold text-center');

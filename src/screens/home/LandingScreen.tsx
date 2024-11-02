@@ -41,7 +41,6 @@ export const LandingScreen = ({ navigation }: LandingScreenProps) => {
                     'session_token': session,
                     'parent_folder_id': '',
                 };
-                console.log('getfolder data', getFolderData);
 
                 const res = await axiosInstance.post(
                     'folder/get_folders',
@@ -55,7 +54,6 @@ export const LandingScreen = ({ navigation }: LandingScreenProps) => {
 
                 const { data } = res.data;
                 setFolders(data || []);
-                console.log(folders);
             } else {
                 console.log('No user data found');
             }
@@ -72,7 +70,7 @@ export const LandingScreen = ({ navigation }: LandingScreenProps) => {
             get_folders(); // Fetch folders when the screen is focused
         }, [])
     );
-    
+
 
 
     return (

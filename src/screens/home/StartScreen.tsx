@@ -24,9 +24,18 @@ export const StartScreen = ({ navigation }: StartScreenProps) => {
         const loadUserData = async () => {
             try {
                 const storedUserData = await AsyncStorage.getItem('userData');
+                if(storedUserData){
+                    const parsedData = JSON.parse(storedUserData); // Parse the JSON string
+                    const id = parsedData.user_id;
+                    const session = parsedData.session.session_token;
+                    if(session){
+                        setToken(session);
+                    }
+                    navigation.replace('Main');
+                }
                 if (storedUserData) {
                     console.log(storedUserData);
-                    navigation.replace('Main');
+                    
                 }
             } catch (error) {
                 console.error('Failed to load user data', error);

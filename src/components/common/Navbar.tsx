@@ -16,7 +16,6 @@ export default function Navbar() {
             if (jsonValue) {
                 const parsedData = JSON.parse(jsonValue);
                 setUserData(parsedData); // Set parsed data to state
-                console.log('Fetched user data on navbar:', parsedData);
             } else {
                 console.log('No user data found in AsyncStorage');
             }
