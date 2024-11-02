@@ -1,34 +1,54 @@
-import React, { useEffect, useState } from 'react';
+import React, { forwardRef, useEffect, useState } from 'react';
 import { Image, SafeAreaView, StatusBar, Text, TouchableOpacity, View } from 'react-native';
 import { style } from 'twrnc';
 import tw from '../../../tw';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../App';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useIsFocused } from '@react-navigation/native';
+import { useIsFocused, useRoute } from '@react-navigation/native';
+import Toast from 'react-native-toast-message';
 
 type StartScreenProps = NativeStackScreenProps<RootStackParamList, 'Start'>
+
+const ToastWrapper = forwardRef((props, ref) => {
+    return <Toast ref={ref} {...props} />;
+});
 
 
 export const StartScreen = ({ navigation }: StartScreenProps) => {
     const [token, setToken] = useState<string | null>(null);
+    const route = useRoute();
     const isFocused = useIsFocused();
 
     useEffect(() => {
-        const loadToken = async () => {
+        const loadUserData = async () => {
             try {
-                const storedToken = await AsyncStorage.getItem('userToken');
-                if(storedToken){
-                    setToken(storedToken);
+                const storedUserData = await AsyncStorage.getItem('userData');
+                if (storedUserData) {
+                    console.log(storedUserData);
+                    navigation.replace('Home');
                 }
-                // console.log(storedToken);
             } catch (error) {
-                console.error('Failed to load token', error);
+                console.error('Failed to load user data', error);
             }
         };
 
-        if (isFocused) {loadToken();}
-    },[isFocused]);
+        // Show logout toast if `logoutSuccess` param is present
+        if (route.params?.logoutSuccess) {
+            Toast.show({
+                type: 'success',
+                text1: 'Success',
+                text2: 'User logged out successfully',
+            });
+
+            // Clean up `logoutSuccess` param after showing toast
+            navigation.setParams({ logoutSuccess: undefined });
+        }
+
+        if (isFocused) {
+            loadUserData();
+        }
+    }, [isFocused, route.params?.logoutSuccess]);
 
     return (
         <SafeAreaView style={tw`bg-white`}>
@@ -45,6 +65,7 @@ export const StartScreen = ({ navigation }: StartScreenProps) => {
                     </TouchableOpacity>
                 </View>
             </View>
+            <ToastWrapper />
         </SafeAreaView>
     );
 };

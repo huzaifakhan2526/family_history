@@ -156,7 +156,7 @@
 
 
 
-import React, { useState, forwardRef } from 'react';
+import React, { useState, forwardRef, useEffect } from 'react';
 import { SafeAreaView, ScrollView, StatusBar, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { style } from 'twrnc';
 import tw from '../../../tw';
@@ -164,7 +164,7 @@ import { ProfilePicker } from './components';
 import Toast from 'react-native-toast-message';
 import axiosInstance from '../../api/axiosInstance';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 
 
 const ToastWrapper = forwardRef((props, ref) => {
@@ -220,6 +220,24 @@ export const LoginScreen = () => {
             });
         }
     };
+
+    useFocusEffect(
+        React.useCallback(() => {
+            const loadUserData = async () => {
+                try {
+                    const storedUserData = await AsyncStorage.getItem('userData'); // Fetching userData
+                    if (storedUserData) {
+                        console.log('storedUserData:', storedUserData);
+                        navigation.replace('Home'); // Navigate to Home if user data exists
+                    }
+                } catch (error) {
+                    console.error('Failed to load user data', error);
+                }
+            };
+
+            loadUserData(); // Call the loadUserData function here
+        }, [navigation]) // Dependency array
+    );
 
 
     return (

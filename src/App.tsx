@@ -33,6 +33,7 @@ export type RootStackParamList = {
   AlbumsDetail: undefined;
   Image: undefined;
   Profile: undefined;
+  Main: undefined;
 };
 
 
@@ -52,6 +53,30 @@ const renderProfileIcon = ({ focused }) => {
 const Tabs = createBottomTabNavigator<RootStackParamList>();
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
+
+
+const TabNavigator = () => {
+  return (
+    <Tabs.Navigator>
+      <Tabs.Screen
+        name="Home"
+        component={LandingScreen}
+        options={{
+          headerShown: false,
+          tabBarIcon: renderHomeIcon,
+        }}
+      />
+      <Tabs.Screen
+        name="Profile"
+        component={ProfileScreen}
+        options={{
+          headerShown: false,
+          tabBarIcon: renderProfileIcon,
+        }}
+      />
+    </Tabs.Navigator>
+  );
+};
 const BottomTabs = () => {
   return (
     <Tabs.Navigator
@@ -157,13 +182,23 @@ function App(): React.JSX.Element {
         <Stack.Screen
           name="Login"
           component={LoginScreen}
-          options={{animation: 'slide_from_bottom'}}
+          options={{ animation: 'slide_from_bottom' }}
         />
         <Stack.Screen
           name="OtpVerification"
           component={OtpVerificationScreen}
-          options={{animation: 'slide_from_right'}}
+          options={{ animation: 'slide_from_right' }}
         />
+
+        <Stack.Screen
+          name="Home"
+          component={LandingScreen}
+          options={{ animation: 'slide_from_right' }}
+        />
+        <Stack.Screen 
+        name="Main" 
+        component={TabNavigator} 
+        /> 
       </Stack.Navigator>
     </NavigationContainer>
 
