@@ -10,7 +10,7 @@ export default function Navbar() {
         <View style={tw`bg-[#FFA500] h-35 rounded-b-2xl`}>
             <View style={tw`flex flex-row justify-end items-center pr-3 pt-1`}>
                 <View style={tw`bg-white h-10 w-10 rounded-full flex items-center justify-center`}>
-                    <Image source={require('../../assets/images/gravity-ui_bell-dot.png')} />
+                    <Image source={require('../../assets/images/gravity-ui_bell-dot3.png')} style={{ width: 25, height: 25 }}/>
                 </View>
                 <TouchableOpacity style={tw`h-15 w-15 rounded-full flex items-center justify-center ml-2`} onPress={() => 
                         navigation.navigate('Profile')}>

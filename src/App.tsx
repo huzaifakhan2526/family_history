@@ -57,7 +57,25 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const TabNavigator = () => {
   return (
-    <Tabs.Navigator>
+    <Tabs.Navigator
+      screenOptions={{
+        tabBarStyle: {
+          borderColor: '#000000',
+          borderTopWidth: 0,
+          backgroundColor: '#FFF6E6',
+          paddingVertical: 5,
+          height: 60,
+          paddingBottom: 5
+        },
+        tabBarLabelStyle: {
+          fontSize: 15,
+          fontWeight: 600,
+        },
+        tabBarIconStyle: {
+          fontSize: 20,
+        },
+        tabBarActiveTintColor: '#FFA500',
+      }}>
       <Tabs.Screen
         name="Home"
         component={LandingScreen}
