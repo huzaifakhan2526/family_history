@@ -190,11 +190,11 @@ function App(): React.JSX.Element {
           options={{ animation: 'slide_from_right' }}
         />
 
-        <Stack.Screen
+        {/* <Stack.Screen
           name="Home"
           component={LandingScreen}
           options={{ animation: 'slide_from_right' }}
-        />
+        /> */}
         <Stack.Screen 
         name="Main" 
         component={TabNavigator} 

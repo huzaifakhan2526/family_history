@@ -228,7 +228,7 @@ export const LoginScreen = () => {
                     const storedUserData = await AsyncStorage.getItem('userData'); // Fetching userData
                     if (storedUserData) {
                         console.log('storedUserData:', storedUserData);
-                        navigation.replace('Home'); // Navigate to Home if user data exists
+                        navigation.replace('Main'); // Navigate to Home if user data exists
                     }
                 } catch (error) {
                     console.error('Failed to load user data', error);

@@ -26,7 +26,7 @@ export const StartScreen = ({ navigation }: StartScreenProps) => {
                 const storedUserData = await AsyncStorage.getItem('userData');
                 if (storedUserData) {
                     console.log(storedUserData);
-                    navigation.replace('Home');
+                    navigation.replace('Main');
                 }
             } catch (error) {
                 console.error('Failed to load user data', error);
@@ -60,7 +60,7 @@ export const StartScreen = ({ navigation }: StartScreenProps) => {
                     family history today!
                 </Text>
                 <View style={boxStyle2}>
-                    <TouchableOpacity style={buttonStyle} onPress={() => token ? navigation.navigate('Home') : navigation.replace('Login')}>
+                    <TouchableOpacity style={buttonStyle} onPress={() => token ? navigation.navigate('Main') : navigation.replace('Login')}>
                         <Text style={buttonTextStyle}>Next</Text>
                     </TouchableOpacity>
                 </View>
