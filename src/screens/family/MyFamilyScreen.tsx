@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, Image, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Dimensions, Image, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { CreateFolderPopup, Topbar, UploadPopUp } from './components';
 import { style } from 'twrnc';
 import tw from '../../../tw';
@@ -15,51 +15,67 @@ type MyFamilyScreenProps = NativeStackScreenProps<RootStackParamList, 'MyFamily'
 export const MyFamilyScreen = ({ navigation, route }: MyFamilyScreenProps) => {
     const [popupVisibility, setPopupVisibilty] = useState(false);
     const [createFolderPopupVisibility, setCreateFolderPopupVisibility] = useState(false);
-    const { folderId, foldername } = route.params;
+    const { folderId, foldername, parentFolderId } = route.params;
     const [folders, setFolders] = useState<any>([]);
     const [media, setMedia] = useState<any>([]);
     const [activeTab, setAcitveTab] = useState('Folder');
     const [laoding, setLoading] = useState(true);
 
 
-    const get_folder_media = async () => {
-        try {
-            setLoading(true);
-            const jsonValue = await AsyncStorage.getItem('userData'); // Replace 'userData' with your actual key
-            if (jsonValue) {
-                const parsedData = JSON.parse(jsonValue); // Parse the JSON string
-                const id = parsedData.user_id;
-                const session = parsedData.session.session_token;
-                const getFolderData = {
-                    'user_id': id,
-                    'session_token': session,
-                    'folder_id': folderId,
-                };
-                console.log('Media folder data',getFolderData);
-                const res = await axiosInstance.post(
-                    'folder/get_folder_media',
-                    getFolderData,
-                    {
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded',
-                        },
-                    }
-                );
 
-                const { data } = res.data;
-                console.log('Media', data);
-                setMedia(data || []);
+    const handleRouting = (buttonName) => {
+        
+        if(buttonName === "Media"){
+            if(parentFolderId == null){
+                console.log('Biamillah');
+                navigation.navigate('CreateAlbum');
             }
+        } else if(buttonName === "Documents"){
 
-            
+        } else {
 
-            
-        } catch (error) {
-            console.log(error);
-        } finally {
-            setLoading(false);
         }
     };
+
+
+    // const get_folder_media = async () => {
+    //     try {
+    //         setLoading(true);
+    //         const jsonValue = await AsyncStorage.getItem('userData'); // Replace 'userData' with your actual key
+    //         if (jsonValue) {
+    //             const parsedData = JSON.parse(jsonValue); // Parse the JSON string
+    //             const id = parsedData.user_id;
+    //             const session = parsedData.session.session_token;
+    //             const getFolderData = {
+    //                 'user_id': id,
+    //                 'session_token': session,
+    //                 'folder_id': folderId,
+    //             };
+    //             console.log('Media folder data', getFolderData);
+    //             const res = await axiosInstance.post(
+    //                 'folder/get_folder_media',
+    //                 getFolderData,
+    //                 {
+    //                     headers: {
+    //                         'Content-Type': 'application/x-www-form-urlencoded',
+    //                     },
+    //                 }
+    //             );
+
+    //             const { data } = res.data;
+    //             console.log('Media', data);
+    //             setMedia(data || []);
+    //         }
+
+
+
+
+    //     } catch (error) {
+    //         console.log(error);
+    //     } finally {
+    //         setLoading(false);
+    //     }
+    // };
 
 
 
@@ -73,7 +89,7 @@ export const MyFamilyScreen = ({ navigation, route }: MyFamilyScreenProps) => {
                 const getFolderData = {
                     'user_id': id,
                     'session_token': session,
-                    'folder_id': folderId,
+                    'parent_folder_id': folderId,
                 };
                 console.log('getFolderData', getFolderData);
 
@@ -93,23 +109,23 @@ export const MyFamilyScreen = ({ navigation, route }: MyFamilyScreenProps) => {
                 console.log('Folder Data', folders);
             }
 
-            
+
         } catch (error) {
             console.log(error);
         }
     };
 
-    useFocusEffect(
-        React.useCallback(() => {
-            get_folders();
-            get_folder_media(); // Fetch folders when the screen is focused
-        }, [])
-    );
+    // useFocusEffect(
+    //     React.useCallback(() => {
+    //         get_folders();
+    //         get_folder_media(); // Fetch folders when the screen is focused
+    //     }, [])
+    // );
 
     return (
         <SafeAreaView>
             <Topbar title={foldername} />
-            <View>
+            {/* <View>
                 <View style={toggleStyle}>
                     <TouchableOpacity onPress={() => setAcitveTab('Folder')}>
                         <Text style={activeTab === 'Folder' ? activeTabStyle : inacitveTabStyle}>Folders</Text>
@@ -169,11 +185,77 @@ export const MyFamilyScreen = ({ navigation, route }: MyFamilyScreenProps) => {
                     <Text style={buttonTextStyle}>+</Text>
                 </TouchableOpacity>
                 <UploadPopUp folderId={folderId} foldername={foldername} visible={popupVisibility} onClose={() => setPopupVisibilty(false)} />
+            </View> */}
+
+            <View style={styles.row}>
+                <TouchableOpacity style={styles.box} onPress={() => handleRouting('Media')}>
+                    <Image source={require('../../assets/images/album.png')} style={styles.image} />
+                    <Text style={styles.label}>Media</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={styles.box} onPress={() => handleRouting('Documents')}>
+                    <Image source={require('../../assets/images/documents.png')} style={styles.image} />
+                    <Text style={styles.label}>Documents</Text>
+                </TouchableOpacity>
+            </View>
+
+            <View style={styles.row}>
+                <TouchableOpacity style={[styles.box, styles.singleBox]} onPress={() => handleRouting('Artifacts')}>
+                    <Image source={require('../../assets/images/ArtifactForm.png')} style={styles.image} />
+                    <Text style={styles.label}>Artifacts</Text>
+                </TouchableOpacity>
             </View>
         </SafeAreaView>
     );
 };
 
+
+const { width } = Dimensions.get('window');
+const boxWidth = (width - 40) / 2;
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        padding: 10,
+        backgroundColor: '#f8f8f8',
+    },
+    row: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginBottom: 10,
+        marginTop: 20,
+        marginLeft: 10,
+        marginRight: 10
+    },
+    box: {
+        width: boxWidth,
+        height: 150,
+        backgroundColor: '#FFE3B0',
+        borderRadius: 10,
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: 10,
+        shadowColor: 'rgba(0, 0, 0, 0.16)',
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 1,
+        shadowRadius: 4,
+        // Box shadow for Android
+        elevation: 4,
+    },
+    singleBox: {
+        width: boxWidth,
+    },
+    image: {
+        width: 100,
+        height: 100,
+        marginBottom: 10,
+        objectFit: 'contain'
+    },
+    label: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        color: '#333',
+    },
+});
 
 const ctrStyle = style(tw`flex flex-row flex-wrap justify-between items-center mt-5`);
 const boxStyle = style(tw`h-35 w-35 bg-ternary rounded-lg flex justify-center items-center shadow-xl m-5`);

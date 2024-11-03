@@ -105,7 +105,7 @@ export const LandingScreen = ({ navigation }: LandingScreenProps) => {
                                             <Text style={tw`text-white font-semibold text-sm text-center`}>Owner</Text>
                                         </TouchableOpacity>
 
-                                            <TouchableOpacity style={[tw`bg-[#FFFFFF] px-1 py-1 rounded-lg w-20`, styles.cardtemplateview]} onPress={() => navigation.navigate('MyFamily', { folderId: items.folder_id, foldername: items.folder_name })}>
+                                            <TouchableOpacity style={[tw`bg-[#FFFFFF] px-1 py-1 rounded-lg w-20`, styles.cardtemplateview]} onPress={() => navigation.navigate('MyFamily', { folderId: items.folder_id, foldername: items.folder_name, parentFolderId: items.parent_folder_id })}>
                                                 <Text style={tw`text-[#BF7C00] font-semibold text-lg text-center`}>View</Text>
                                             </TouchableOpacity>
                                             <TouchableOpacity style={[tw`bg-[#BF7C00] px-1 py-1 px-2 rounded-lg w-20 relative z-1 flex-row items-center justify-between`, styles.cardtemplateinvite]}>

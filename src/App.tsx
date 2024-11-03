@@ -26,7 +26,7 @@ export type RootStackParamList = {
   BottomTabs: undefined;
   Home: undefined;
   CreateFolder: undefined;
-  MyFamily: { folderId: string | null, foldername: string | null };
+  MyFamily: { folderId: string | null, foldername: string | null, parentFolderId: string | null };
   ImagesScreen: undefined;
   CreateAlbum: undefined;
   Albums: undefined;
@@ -207,6 +207,11 @@ function App(): React.JSX.Element {
           component={OtpVerificationScreen}
           options={{ animation: 'slide_from_right' }}
         />
+        <Stack.Screen
+          name="CreateAlbum"
+          component={CreateAlbumScreen}
+          options={{ animation: 'slide_from_right' }}
+        />
 
         <Stack.Screen
           name="CreateFolder"
@@ -221,7 +226,7 @@ function App(): React.JSX.Element {
         <Stack.Screen 
         name="MyFamily" 
         component={MyFamilyScreen} 
-        initialParams={{ folderId: null }}
+        initialParams={{ folderId: null, parentFolderId: null }}
         options={{ animation: 'slide_from_right' }}
         /> 
       </Stack.Navigator>
