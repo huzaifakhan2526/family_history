@@ -25,10 +25,10 @@ export type RootStackParamList = {
   OtpVerification: undefined;
   BottomTabs: undefined;
   Home: undefined;
-  CreateFolder: undefined;
+  CreateFolder: { folderId: string | null, foldername: string | null, parentFolderId: string | null };
   MyFamily: { folderId: string | null, foldername: string | null, parentFolderId: string | null };
   ImagesScreen: undefined;
-  CreateAlbum: undefined;
+  CreateAlbum: { folderId: string | null, foldername: string | null, parentFolderId: string | null };
   Albums: undefined;
   AlbumsDetail: undefined;
   Image: undefined;
@@ -217,6 +217,7 @@ function App(): React.JSX.Element {
           name="CreateFolder"
           component={CreateFolderScreen}
           options={{ animation: 'slide_from_bottom' }}
+          initialParams={{ folderId: null, parentFolderId: null }}
         />
         <Stack.Screen 
         name="Main" 

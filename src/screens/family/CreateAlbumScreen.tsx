@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { forwardRef, useState } from 'react';
 import { Image, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { Topbar } from './components';
 import { style } from 'twrnc';
@@ -10,13 +10,27 @@ import Toast from 'react-native-toast-message';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axiosInstance from '../../api/axiosInstance';
 
+const ToastWrapper = forwardRef((props, ref) => {
+    return <Toast ref={ref} {...props} />;
+});
+
 type CreateAlbumScreenProps = NativeStackScreenProps<RootStackParamList, 'CreateAlbum'>
 
-export const CreateAlbumScreen = ({ navigation }: CreateAlbumScreenProps) => {
-    const [selectedImage, setSelectedImage] = useState(true);
+export const CreateAlbumScreen = ({ navigation, route }: CreateAlbumScreenProps) => {
+    const [selectedImage, setSelectedImage] = useState<Asset | null>(null);    
     const [isButtonDisabled, setButtonDisabled] = useState(false);
     const [uploadStatus, setUploadStatus] = useState('Submit to upload');
     const [imageFileName, setImageFileName] = useState<string | any>(null);
+    const [folderName, setFolderName] = useState<string>('');
+    const [access, setAccess] = useState<string | null>(null);
+    const { folderId, foldername, parentFolderId } = route.params;
+
+
+
+
+    const createAlbum = () => {
+        console.log('Create Album');
+    }
 
 
 
@@ -41,6 +55,77 @@ export const CreateAlbumScreen = ({ navigation }: CreateAlbumScreenProps) => {
             }
         });
     };
+
+
+    const create_folder = async () => {
+        try {
+            if (!imageFileName) {
+                Toast.show({
+                    type: 'error',
+                    text1: 'Error',
+                    text2: 'Please select an image for the folder.',
+                });
+                return;
+            }
+            
+            if (!folderName) {
+                Toast.show({
+                    type: 'error',
+                    text1: 'Error',
+                    text2: 'Please provide a Album name.',
+                });
+                return;
+            }
+          const jsonValue = await AsyncStorage.getItem('userData');
+          if (jsonValue) {
+            const parsedData = JSON.parse(jsonValue); // Parse the JSON string
+            const storedUserId = parsedData.user_id;
+            const storedToken = parsedData.session.session_token;
+            const folderData = {
+              'user_id': storedUserId,
+              'session_token': storedToken,
+              'image': imageFileName,
+              'folder_name': folderName,
+              'parent_folder_id': folderId,
+              'is_sharable': access,
+            };
+            console.log(folderData);
+    
+            const res = await axiosInstance.post(
+              'folder/create_folder',
+              folderData,
+              {
+                headers: {
+                  'Content-Type': 'application/x-www-form-urlencoded',
+                },
+              }
+            );
+    
+            if (res.data.status) {
+              Toast.show({
+                type: 'success',
+                text1: 'Folder Created Successfully',
+                text2: 'You have added a new folder',
+              });
+    
+              setAccess(null);
+              setSelectedImage(null);
+              setFolderName('');
+    
+              navigation.navigate('Main');
+            }
+          }
+    
+    
+    
+        } catch (error) {
+          Toast.show({
+            type: 'error',
+            text1: 'Something went wrong !!',
+            text2: 'Please try again',
+          });
+        }
+      };
 
 
 
@@ -103,19 +188,19 @@ export const CreateAlbumScreen = ({ navigation }: CreateAlbumScreenProps) => {
     };
 
     return (
-        <SafeAreaView style={{flex: 1}}>
+        <SafeAreaView style={{ flex: 1 }}>
             <Topbar title="Create an Album" />
 
             <ScrollView>
 
-            <View style={[boxStyle, styles.mainComponent]}>
-                <Text style={textStyle}>"To view and manage your content, please create a new album first."</Text>
-                <View>
+                <View style={[boxStyle, styles.mainComponent]}>
+                    <Text style={textStyle}>"To view and manage your content, please create a new album first."</Text>
                     <View>
-                        <Text style={inputTextStyle}>Name of the Album</Text>
-                        <TextInput placeholder="Enter name of the album" style={[inputStyle, styles.inputStyle]} placeholderTextColor="#808080" />
-                    </View>
-                    <View style={tw`mb-7`}>
+                        <View>
+                            <Text style={inputTextStyle}>Name of the Album</Text>
+                            <TextInput onChangeText={(text) => setFolderName(text)} value={folderName} placeholder="Enter name of the album" style={[inputStyle, styles.inputStyle]} placeholderTextColor="#808080" />
+                        </View>
+                        {/* <View style={tw`mb-7`}>
                         <Text style={inputTextStyle}>Select a Category</Text>
                         <View style={tw`flex flex-row items-center justify-start`}>
                             <TouchableOpacity style={tw`flex flex-row items-center mr-3`} onPress={() => setSelectedImage(true)}>
@@ -135,53 +220,54 @@ export const CreateAlbumScreen = ({ navigation }: CreateAlbumScreenProps) => {
                                 <Text style={inputTextStyle}>Person</Text>
                             </TouchableOpacity>
                         </View>
-                    </View>
-                    <View>
-                        <Text style={inputTextStyle}>Upload Cover Photo</Text>
-                        <View style={{ alignItems: 'center', paddingTop: 12 }}>
-                            {selectedImage ? (
-                                <>
-                                    <Image
-                                        source={{ uri: selectedImage.uri }}
-                                        style={{
-                                            width: 300,
-                                            height: 200,
-                                            borderRadius: 10,
-                                            borderWidth: 2,
-                                            borderColor: '#fff',
-                                            objectFit: 'contain',
-                                            backgroundColor: 'grey', // Set background color if needed
-                                        }} // Adjust dimensions as needed
-                                    />
-                                    <TouchableOpacity
-                                        style={[buttonStyle, { marginTop: 11 }, isButtonDisabled ? styles.disabledButton : {}]}
-                                        onPress={!isButtonDisabled ? upload_media : null}
-                                        disabled={isButtonDisabled} // Disables the button functionality
-                                    >
-                                        <Text style={buttonTextStyle}>{uploadStatus}</Text>
-                                    </TouchableOpacity>
-                                </>
-                            ) : null}
+                    </View> */}
+                        <View>
+                            <Text style={inputTextStyle}>Upload Cover Photo</Text>
+                            <View style={{ alignItems: 'center', paddingTop: 12 }}>
+                                {selectedImage ? (
+                                    <>
+                                        <Image
+                                            source={{ uri: selectedImage.uri }}
+                                            style={{
+                                                width: 300,
+                                                height: 200,
+                                                borderRadius: 10,
+                                                borderWidth: 2,
+                                                borderColor: '#fff',
+                                                objectFit: 'contain',
+                                                backgroundColor: 'grey', // Set background color if needed
+                                            }} // Adjust dimensions as needed
+                                        />
+                                        <TouchableOpacity
+                                            style={[buttonStyle, { marginTop: 11 }, isButtonDisabled ? styles.disabledButton : {}]}
+                                            onPress={!isButtonDisabled ? upload_media : null}
+                                            disabled={isButtonDisabled} // Disables the button functionality
+                                        >
+                                            <Text style={buttonTextStyle}>{uploadStatus}</Text>
+                                        </TouchableOpacity>
+                                    </>
+                                ) : null}
 
-                            <TouchableOpacity onPress={handleImageSelect} style={{ marginTop: selectedImage ? 12 : 0 }}>
-                                <View>
-                                <Text style={textStyle2}>Upload from cloud or gallery</Text>
-                                <View style={upladBox}>
-                                        <Text style={textStyle3}>+</Text>
+                                <TouchableOpacity onPress={handleImageSelect} style={{ marginTop: selectedImage ? 12 : 0 }}>
+                                    <View>
                                         <Text style={textStyle2}>Upload from cloud or gallery</Text>
+                                        <View style={upladBox}>
+                                            <Text style={textStyle3}>+</Text>
+                                            <Text style={textStyle2}>Upload from cloud or gallery</Text>
+                                        </View>
                                     </View>
-                                </View>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                        <View style={boxStyle2}>
+                            <TouchableOpacity style={buttonStyle} onPress={create_folder}>
+                                <Text style={buttonTextStyle}>Save</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
-                    <View style={boxStyle2}>
-                        <TouchableOpacity style={buttonStyle} onPress={() => navigation.navigate('Albums')}>
-                            <Text style={buttonTextStyle}>Save</Text>
-                        </TouchableOpacity>
-                    </View>
                 </View>
-            </View>
             </ScrollView>
+            <ToastWrapper />
         </SafeAreaView>
     );
 };
@@ -201,7 +287,7 @@ const styles = StyleSheet.create({
     inputStyle: {
         color: '#000',  // Text color
     },
-    mainComponent:{
+    mainComponent: {
         marginBottom: 25
     }
 });

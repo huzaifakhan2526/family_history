@@ -24,11 +24,14 @@ export const MyFamilyScreen = ({ navigation, route }: MyFamilyScreenProps) => {
 
 
     const handleRouting = (buttonName) => {
-        
+        console.log(foldername);
         if(buttonName === "Media"){
             if(parentFolderId == null){
-                console.log('Biamillah');
-                navigation.navigate('CreateAlbum');
+                navigation.navigate('CreateAlbum', {
+                    folderId: folderId,
+                    foldername: foldername,
+                    parentFolderId: parentFolderId,
+                });
             }
         } else if(buttonName === "Documents"){
 

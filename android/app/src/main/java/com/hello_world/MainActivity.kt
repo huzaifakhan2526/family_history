@@ -1,4 +1,4 @@
-package com.hello_world
+package com.cv.familyarchive
 import android.os.Bundle;
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate

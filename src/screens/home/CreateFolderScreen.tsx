@@ -18,7 +18,7 @@ const ToastWrapper = forwardRef((props, ref) => {
 type CreateFolderScreenProps = NativeStackScreenProps<RootStackParamList, 'CreateFolder'>
 
 
-export const CreateFolderScreen = ({ navigation }: CreateFolderScreenProps) => {
+export const CreateFolderScreen = ({ navigation, route }: CreateFolderScreenProps) => {
 
   const [folderName, setFolderName] = useState<string>('');
   const [access, setAccess] = useState<string | null>(null);
@@ -27,6 +27,7 @@ export const CreateFolderScreen = ({ navigation }: CreateFolderScreenProps) => {
   const [userData, setUserData] = useState({});
   const [isButtonDisabled, setButtonDisabled] = useState(false);
   const [uploadStatus, setUploadStatus] = useState('Submit to upload'); // State to manage the button text
+  const { folderId, foldername, parentFolderId } = route.params;
 
 
 
@@ -126,7 +127,6 @@ export const CreateFolderScreen = ({ navigation }: CreateFolderScreenProps) => {
           'parent_folder_id': '',
           'is_sharable': access,
         };
-        console.log(folderData);
 
         const res = await axiosInstance.post(
           'folder/create_folder',
@@ -212,7 +212,7 @@ export const CreateFolderScreen = ({ navigation }: CreateFolderScreenProps) => {
           <View style={tw`mt-7 w-[100%]`}>
             <View>
               <Text style={inputTextStyle}>Enter a name for folder?</Text>
-              <TextInput value={folderName} placeholder="Name of the folder" placeholderTextColor="grey" style={[inputStyle, { color: '#000' }]} onChangeText={(text) => setFolderName(text)} value={folderName} />
+              <TextInput value={folderName} placeholder="Name of the folder" placeholderTextColor="grey" style={[inputStyle, { color: '#000' }]} onChangeText={(text) => setFolderName(text)} />
             </View>
             <View style={tw`mb-7`}>
               <Text style={inputTextStyle}>Want to give access to others?</Text>
