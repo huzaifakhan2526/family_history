@@ -19,6 +19,7 @@ import { StatusBar } from 'react-native';
 import { OtpVerificationScreen } from './verification/OtpVerificationScreen';
 
 
+
 export type RootStackParamList = {
   Start: undefined;
   Login: undefined;
